@@ -14,8 +14,7 @@ function AppHeader() {
     </Button>
     
     <SelectButton
-      id="status"
-      >
+      id="status">
       <option value="all">All</option>
       <option value="incomplete">Incomplete</option>
       <option value="complete">Completed</option>
