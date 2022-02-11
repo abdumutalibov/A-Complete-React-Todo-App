@@ -13,6 +13,7 @@ function App() {
         <div className={styles.app__wrapper}>
           <AppHeader />
           <AppContent />
+          <AppContent />
         </div>
       </div>
       <Toaster
