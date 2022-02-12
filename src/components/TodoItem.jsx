@@ -1,17 +1,26 @@
 import { format } from 'date-fns';
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../styles/modules/todoItem.module.scss';
 import {getClasses} from '../utils/getClasses'
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
+import { deleteTodo } from '../slices/todoSlice';
+import toast from 'react-hot-toast';
+import TodoModal from './TodoModal';
 
-function TodoItem({todo}) {
+function TodoItem({ todo }) {
+  const dispatch = useDispatch();
+const [updateModalOpen, setUpdateModalOpen]= useState(false);
+
   const handleDelete =()=>{
-    console.log('delete');
+    dispatch(deleteTodo(todo.id));
+    toast.success('Todo Deleted Successfully')
   }
   const handleUpdate =()=>{
-    console.log('Edit');
+    setUpdateModalOpen(true)
   }
   return (
+    <>
     <div className={styles.item}>
        <div className={styles.todoDetails}>
            []
@@ -21,7 +30,7 @@ function TodoItem({todo}) {
                 styles.todoText,
                 todo.status === 'complete' && styles['todoText--completed'],
               ])}
-            >
+              >
               {todo.title}
             </p>
             <p className={styles.time}>
@@ -43,11 +52,17 @@ function TodoItem({todo}) {
              onKeyDown={handleUpdate}
              role='button'
              tabIndex={0}
-           >
+             >
             <MdEdit/>
            </div>
        </div>
         </div>
+        <TodoModal 
+        type='update'
+        todo
+         modalOpen={updateModalOpen} 
+         setModalOpen={setUpdateModalOpen}/>
+             </>
   )
 }
 
