@@ -1,12 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from '../styles/modules/modal.module.scss';
 import {MdOutlineClose} from 'react-icons/md'
-import Button from './Button'
 import { useDispatch } from 'react-redux';
 import { addTodo, updateTodo } from '../slices/todoSlice';
 import {v4 as uuid} from 'uuid'
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
+import Button from './Button'
+import { AnimatePresence, motion } from 'framer-motion';
+
+const dropIn = {
+    hidden:{
+        opacity:0,
+        transform: 'scale()0.9',
+    },
+    visible:{
+        transform: 'scale(1)',
+        opacity: 1,
+        transform: {
+            duration: 0.1,
+            type: 'spring',
+            damping:25,
+            stiffness:500,
+        },
+    },
+    exit:{
+        transform:'scale(0.9)',
+        opacity: 0,
+    }
+}
+
+
 function TodoModal({type, modalOpen, setModalOpen, todo}) {
 
     const [title, setTitle] = useState('');
@@ -51,9 +74,11 @@ function TodoModal({type, modalOpen, setModalOpen, todo}) {
                     status,
                 })
                 );
+                toast.success('Updated Succefully')
                 
             }else{
                 toast.error('No Changes Modal')
+                return;
             }
             
         }
@@ -62,19 +87,32 @@ function TodoModal({type, modalOpen, setModalOpen, todo}) {
     };
   
   return (
-      modalOpen && (
+      <AnimatePresence>
 
-          <div className={styles.wrapper} >
-        <div className={styles.container}>
-            <div className={styles.closeButton}
+     { modalOpen && (
+
+          <motion.div className={styles.wrapper} 
+          initial={{opacity:0}}
+          animate={{opacity: 1}} 
+          exit={{opacity:0}}
+          >
+        <motion.div className={styles.container} 
+        variant={dropIn}
+        initial='hidden'
+        animate='visible'
+        exit='exit'
+        >
+            <motion.div className={styles.closeButton}
              onKeyDown={() => setModalOpen(false)}
              onClick={() => setModalOpen(false)}
-             role="button"
              tabIndex={0}
-
+             role="button"
+             initial={{ top:40, opacity:0}}
+             animate={{ top:-10, opacity:1}}
+             exit={{ top:40, opacity:0}}
             >
 <MdOutlineClose/>
-            </div>
+            </motion.div>
 <form className={styles.form} onSubmit={(e)=>handleSubmit(e)}>
     <h1 className={styles.formTitle}>
         {type === 'update' ? 'Update' :'Add'}</h1>
@@ -108,14 +146,15 @@ function TodoModal({type, modalOpen, setModalOpen, todo}) {
         variant='secondary'
         onKeyDown={() => setModalOpen(false)}
         onClick={() => setModalOpen(false)}
-         >
+        >
                   Cancel
                 </Button>
     </div>
 </form>
-        </div>
-        </div>
-      )
+        </motion.div>
+        </motion.div>
+      )}
+             </AnimatePresence>
       )
 }
 
