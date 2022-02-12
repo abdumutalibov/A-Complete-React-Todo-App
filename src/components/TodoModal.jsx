@@ -17,8 +17,11 @@ function TodoModal({type, modalOpen, setModalOpen, todo}) {
         if(type === 'update' &&  todo){
             setTitle(todo.title);
             setStatus(todo.status);
+        }else{
+            setTitle('')
+            setStatus('incomplete')
         }
-    },[type, todo])
+    },[type, todo,modalOpen])
 
     const handleSubmit =(e)=>{
         e.preventDefault();
@@ -38,22 +41,23 @@ function TodoModal({type, modalOpen, setModalOpen, todo}) {
             ); 
             
             toast.success('Task Added Successfully ');
-            setModalOpen(false)
         };
         if(type === 'update'){
-            if(todo.title !== title || todo.status !==status){
-                dispatch(updateTodo({
+            if(todo.title !== title || todo.status !== status){
+                dispatch(
+                    updateTodo({
                     ...todo,
                     title,
                     status,
-                }))
+                })
+                );
+                
+            }else{
+                toast.error('No Changes Modal')
             }
-
-        }else{
-            toast.error('No Changes Modal')
+            
         }
-}else{
-    toast.error("Title shouldn't be empty")
+        setModalOpen(false)
 }
     };
   

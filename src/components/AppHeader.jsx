@@ -5,7 +5,11 @@ import { useState } from 'react';
 
 function AppHeader() {
   const [modalOpen, setModalOpen] =useState(false)
+const [filterStatus, setFilterStatus] = useState(false);
 
+const updateFilter =()=>{
+  console.log('updating select');
+}
   return (
     <div className={styles.appHeader}>
     <Button variant="primary" onClick={() => setModalOpen(true )} >
@@ -14,7 +18,8 @@ function AppHeader() {
     </Button>
     
     <SelectButton
-      id="status">
+      id="status" value={filterStatus} onChange={updateFilter}>
+        
       <option value="all">All</option>
       <option value="incomplete">Incomplete</option>
       <option value="complete">Completed</option>
