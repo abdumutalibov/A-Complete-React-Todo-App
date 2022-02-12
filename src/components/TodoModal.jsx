@@ -16,7 +16,7 @@ const dropIn = {
     visible:{
         transform: 'scale(1)',
         opacity: 1,
-        transform: {
+        transition: {
             duration: 0.1,
             type: 'spring',
             damping:25,
